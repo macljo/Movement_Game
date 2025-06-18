@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://ch64wa8w31crj"]
+
+[ext_resource type="Script" uid="uid://djb1cqohq3qo1" path="res://FPSController/FPSController.gd" id="1_2j53v"]
+[ext_resource type="PackedScene" uid="uid://b1wn3i5dcwp48" path="res://weapons/weapon.tscn" id="2_jryqt"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1305s"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1305s"]
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+script = ExtResource("1_2j53v")
+look_sensitivity = 0.002
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_1305s")
+
+[node name="WorldModel" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WorldModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_1305s")
+
+[node name="Head" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.79, 0)
+
+[node name="Weapon" parent="Head/Camera3D" instance=ExtResource("2_jryqt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.075, -0.631, -1.474)

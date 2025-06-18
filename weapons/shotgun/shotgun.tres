@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Weapons" load_steps=4 format=3 uid="uid://buljbqqgqt78f"]
+
+[ext_resource type="Script" uid="uid://bcs7dqr8m8mvg" path="res://weapons/weapons.gd" id="1_q1vfs"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q1vfs"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_q1vfs"]
+material = SubResource("StandardMaterial3D_q1vfs")
+radius = 0.25
+height = 0.5
+
+[resource]
+script = ExtResource("1_q1vfs")
+name = &"Shotgun"
+position = Vector3(1.075, -0.631, -1.474)
+rotation = Vector3(0, 0, 0)
+mesh = SubResource("SphereMesh_q1vfs")
+shadow = false
+damage_amount = 0.0
+knockback_amount = 400.0
+metadata/_custom_type_script = "uid://bcs7dqr8m8mvg"

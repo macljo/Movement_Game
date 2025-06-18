@@ -1,0 +1,53 @@
+[gd_scene load_steps=7 format=3 uid="uid://damnhbtbeb3h"]
+
+[ext_resource type="Texture2D" uid="uid://bsbmkdu84jxxp" path="res://textures/granite_tile_diff_4k.png" id="1_j5go0"]
+[ext_resource type="PackedScene" uid="uid://ch64wa8w31crj" path="res://FPSController/FPSController.tscn" id="1_u3tya"]
+[ext_resource type="Texture2D" uid="uid://ckrwy4u10ptrt" path="res://textures/granite_tile_nor_gl_4k.png" id="2_m3j4o"]
+[ext_resource type="Texture2D" uid="uid://c1s7e3jug74aw" path="res://textures/granite_tile_rough_4k.png" id="3_53g8k"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u3tya"]
+albedo_texture = ExtResource("1_j5go0")
+roughness_texture = ExtResource("3_53g8k")
+normal_enabled = true
+normal_texture = ExtResource("2_m3j4o")
+uv1_scale = Vector3(60, 60, 60)
+
+[sub_resource type="Curve3D" id="Curve3D_c6gwx"]
+_data = {
+"points": PackedVector3Array(0, 13.1616, -4.57741, 0, -13.1616, 4.57741, 0, 0.0259333, 0.0152311, 0, 0, 0, 0, 0, 0, 0, -10.8677, 15.4395),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[node name="World" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 11.3346, 0)
+shadow_enabled = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(40, 0.1, 20)
+material = SubResource("StandardMaterial3D_u3tya")
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("1_u3tya")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0497487, 0.30758, 0.815798)
+
+[node name="Path3D" type="Path3D" parent="."]
+transform = Transform3D(2.89159, 0, 0, 0, 2.21693, 0, 0, 0, 2.80202, 0, 0, 10.0178)
+curve = SubResource("Curve3D_c6gwx")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Path3D"]
+use_collision = true
+polygon = PackedVector2Array(0, 0, 0.5, 1, 1, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
