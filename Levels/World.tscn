@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://damnhbtbeb3h"]
+[gd_scene load_steps=8 format=3 uid="uid://damnhbtbeb3h"]
 
 [ext_resource type="Texture2D" uid="uid://bsbmkdu84jxxp" path="res://textures/granite_tile_diff_4k.png" id="1_j5go0"]
 [ext_resource type="PackedScene" uid="uid://ch64wa8w31crj" path="res://FPSController/FPSController.tscn" id="1_u3tya"]
 [ext_resource type="Texture2D" uid="uid://ckrwy4u10ptrt" path="res://textures/granite_tile_nor_gl_4k.png" id="2_m3j4o"]
 [ext_resource type="Texture2D" uid="uid://c1s7e3jug74aw" path="res://textures/granite_tile_rough_4k.png" id="3_53g8k"]
+[ext_resource type="PackedScene" uid="uid://37m1k8f4i7lj" path="res://hud.tscn" id="5_m3j4o"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u3tya"]
 albedo_texture = ExtResource("1_j5go0")
@@ -51,3 +52,5 @@ path_local = true
 path_continuous_u = true
 path_u_distance = 1.0
 path_joined = false
+
+[node name="HUD" parent="." instance=ExtResource("5_m3j4o")]

@@ -30,4 +30,5 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.79, 0)
 
 [node name="Weapon" parent="Head/Camera3D" instance=ExtResource("2_jryqt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.075, -0.631, -1.474)
+
+[node name="FireDelayTimer" type="Timer" parent="."]

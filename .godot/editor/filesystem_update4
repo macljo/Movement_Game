@@ -1,0 +1,7 @@
+res://FPSController/FPSController.tscn
+res://weapons/shotgun/shotgun.tres
+res://Levels/World.tscn
+res://weapons/weapon.tscn
+res://hud.tscn
+res://FPSController/FPSController.gd
+res://weapons/weapons.gd

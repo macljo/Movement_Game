@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
 @export var look_sensitivity : float = 0.004
-@export var jump_velocity := 5.0
+@export var jump_velocity := 4.5
 @export var auto_bhop := true
 
 # ground movement settings
@@ -13,29 +13,47 @@ extends CharacterBody3D
 # air movement settings
 @export var air_cap := 0.85 # can surf steeper ramps if higher, makes it easier to stick and bhop
 @export var air_accel := 1600.0
-@export var air_move_speed := 500.0
+@export var air_move_speed := 700.0
 
 var wish_dir := Vector3.ZERO
+
+# weapon variables
+@onready var init_weapons_node = $"%Camera3D/Weapon"
+@onready var current_weapon_data = init_weapons_node.WEAPON_TYPE
+@onready var fireDelayTimer := $FireDelayTimer
+var can_fire := true
+
+# reference speed label
+@onready var speed_label : Label = get_node("/root/World/HUD/SpeedLabel")
 
 func _ready():
 	for child in %WorldModel.find_children("*", "VisualInstance3D"):
 		child.set_layer_mask_value(1, false)
 		child.set_layer_mask_value(2, true)
+	
+	fireDelayTimer.timeout.connect(_on_fire_delay_timer_timeout)
 
-func _unhandled_input(event):
-	if event is InputEventMouseButton:
+func _input(event):
+	if event.is_action_pressed("ui_cancel"):
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:	
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		else:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	elif event is InputEventMouseButton and Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	elif event.is_action_pressed("ui_cancel"):
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
 			rotate_y(-event.relative.x * look_sensitivity)
 			%Camera3D.rotate_x(-event.relative.y * look_sensitivity)
 			%Camera3D.rotation.x = clamp(%Camera3D.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+		if event.is_action_pressed("fire") and can_fire:
+			fire_weapon()
 
 func _process(delta):
-	pass
+	if speed_label:
+		var current_speed = velocity.length()
+		speed_label.text = "Speed: " + str(round(current_speed * 100) / 100.0)
 	
 func clip_velocity(normal: Vector3, overbounce : float, delta : float) -> void:
 	# allows surfing
@@ -104,3 +122,18 @@ func _physics_process(delta):
 		_handle_air_physics(delta)
 		
 	move_and_slide()
+
+func fire_weapon():
+	#var current_weapon_data = init_weapons_node.WEAPON_TYPE
+	
+	if current_weapon_data.name == "Shotgun":
+		var knockback = current_weapon_data.knockback
+		var knockback_direction = %Camera3D.global_transform.basis.z.normalized()
+		
+		self.velocity += knockback_direction * knockback
+		
+		can_fire = false
+		fireDelayTimer.start(current_weapon_data.fire_delay)
+
+func _on_fire_delay_timer_timeout():
+	can_fire = true
