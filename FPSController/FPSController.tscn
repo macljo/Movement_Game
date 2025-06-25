@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://ch64wa8w31crj"]
+[gd_scene load_steps=6 format=3 uid="uid://ch64wa8w31crj"]
 
 [ext_resource type="Script" uid="uid://djb1cqohq3qo1" path="res://FPSController/FPSController.gd" id="1_2j53v"]
 [ext_resource type="PackedScene" uid="uid://b1wn3i5dcwp48" path="res://weapons/weapon.tscn" id="2_jryqt"]
+[ext_resource type="PackedScene" uid="uid://dk342mjwayvoj" path="res://weapons/rpg/rocket.tscn" id="2_vcg3l"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1305s"]
 
@@ -10,6 +11,7 @@
 [node name="CharacterBody3D" type="CharacterBody3D"]
 script = ExtResource("1_2j53v")
 look_sensitivity = 0.002
+rocket_scene = ExtResource("2_vcg3l")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -22,13 +24,15 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_1305s")
 
-[node name="Head" type="Node3D" parent="."]
-unique_name_in_owner = true
-
-[node name="Camera3D" type="Camera3D" parent="Head"]
-unique_name_in_owner = true
+[node name="HeadOriginalPosition" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.79, 0)
 
-[node name="Weapon" parent="Head/Camera3D" instance=ExtResource("2_jryqt")]
+[node name="Head" type="Node3D" parent="HeadOriginalPosition"]
+unique_name_in_owner = true
+
+[node name="Camera3D" type="Camera3D" parent="HeadOriginalPosition/Head"]
+unique_name_in_owner = true
+
+[node name="Weapon" parent="HeadOriginalPosition/Head/Camera3D" instance=ExtResource("2_jryqt")]
 
 [node name="FireDelayTimer" type="Timer" parent="."]

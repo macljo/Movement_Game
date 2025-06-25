@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="Weapons" load_steps=3 format=3 uid="uid://b04r3b8i8mipp"]
+
+[ext_resource type="Script" uid="uid://bcs7dqr8m8mvg" path="res://weapons/weapons.gd" id="1_sqryc"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_4ihxd"]
+size = Vector3(0.5, 0.5, 1)
+
+[resource]
+script = ExtResource("1_sqryc")
+name = &"RPG"
+position = Vector3(1.075, -0.631, -1.474)
+rotation = Vector3(0, 0, 0)
+mesh = SubResource("BoxMesh_4ihxd")
+shadow = false
+base_damage = 0.0
+bullet_count = 4
+spread_angle = 0.0
+knockback = 0.0
+ammo_capacity = 4.0
+reload_time = 5.0
+fire_delay = 0.25
+range = 50.0
+explosion_radius = 5.0
+explosion_damage = 50.0
+explosion_knockback_force = 10.0
+projectile_speed = 20.0
+explosion_scene_path = "res://weapons/rpg/explosion.tscn"
+metadata/_custom_type_script = "uid://bcs7dqr8m8mvg"

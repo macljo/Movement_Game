@@ -3,9 +3,12 @@ extends CharacterBody3D
 @export var look_sensitivity : float = 0.004
 @export var jump_velocity := 4.5
 @export var auto_bhop := true
+@onready var _original_capsule_height = $CollisionShape3D.shape.height
+@onready var player_camera = %Camera3D
 
 # ground movement settings
 @export var walk_speed := 7.0
+@export var crouch_speed := walk_speed * 0.8
 @export var ground_accel := 14.0
 @export var ground_decel := 10.0
 @export var ground_friction := 6.0
@@ -17,10 +20,15 @@ extends CharacterBody3D
 
 var wish_dir := Vector3.ZERO
 
+# crouch settings
+const CROUCH_TRANSLATE = 0.7
+const CROUCH_JUMP_ADD = CROUCH_TRANSLATE * 0.9 # adds camera jitter in air on crouch
+var is_crouched := false
+
 # weapon variables
 @onready var init_weapons_node = $"%Camera3D/Weapon"
-@onready var current_weapon_data = init_weapons_node.WEAPON_TYPE
 @onready var fireDelayTimer := $FireDelayTimer
+@export var rocket_scene : PackedScene
 var can_fire := true
 
 # reference speed label
@@ -32,6 +40,7 @@ func _ready():
 		child.set_layer_mask_value(2, true)
 	
 	fireDelayTimer.timeout.connect(_on_fire_delay_timer_timeout)
+	seed(hash(Time.get_unix_time_from_system()))
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
@@ -53,7 +62,7 @@ func _input(event):
 func _process(delta):
 	if speed_label:
 		var current_speed = velocity.length()
-		speed_label.text = "Speed: " + str(round(current_speed * 100) / 100.0)
+		speed_label.text = "Speed: " + str(round(current_speed * 100) / 100.0 * 50) + " UPS"
 	
 func clip_velocity(normal: Vector3, overbounce : float, delta : float) -> void:
 	# allows surfing
@@ -114,6 +123,8 @@ func _physics_process(delta):
 	# depending on which way you have the character facing, you may have to negate the input directions
 	wish_dir = self.global_transform.basis * Vector3(input_dir.x, 0., input_dir.y)
 	
+	_handle_crouch(delta)
+	
 	if is_on_floor():
 		if Input.is_action_just_pressed("jump") or (auto_bhop and Input.is_action_pressed("jump")):
 			self.velocity.y = jump_velocity
@@ -122,18 +133,91 @@ func _physics_process(delta):
 		_handle_air_physics(delta)
 		
 	move_and_slide()
+	
+func _handle_crouch(delta) -> void:
+	var was_crouched_last_frame = is_crouched
+	if Input.is_action_pressed("crouch"):
+		is_crouched = true
+	elif is_crouched and not self.test_move(self.global_transform, Vector3(0, CROUCH_TRANSLATE,0)):
+		is_crouched = false
+		
+	# implement source style crouch-jump
+	var translate_y_if_possible := 0.0
+	if was_crouched_last_frame != is_crouched and not is_on_floor():
+		translate_y_if_possible = CROUCH_JUMP_ADD if is_crouched else -CROUCH_JUMP_ADD
+	if translate_y_if_possible != 0.0:
+		var result = KinematicCollision3D.new()
+		self.test_move(self.global_transform, Vector3(0, translate_y_if_possible, 0), result)
+		self.position.y += result.get_travel().y
+		%Head.position.y -= result.get_travel().y
+		%Head.position.y = clampf(%Head.position.y, -CROUCH_TRANSLATE, 0)
+	
+	%Head.position.y = move_toward(%Head.position.y, -CROUCH_TRANSLATE if is_crouched else 0, 7.0 * delta)
+	$CollisionShape3D.shape.height = _original_capsule_height - CROUCH_TRANSLATE if is_crouched else _original_capsule_height
+	$CollisionShape3D.position.y = $CollisionShape3D.shape.height / 2
 
 func fire_weapon():
-	#var current_weapon_data = init_weapons_node.WEAPON_TYPE
+	var current_weapon_data = init_weapons_node.WEAPON_TYPE
 	
-	if current_weapon_data.name == "Shotgun":
-		var knockback = current_weapon_data.knockback
-		var knockback_direction = %Camera3D.global_transform.basis.z.normalized()
+	if not current_weapon_data:
+		print("No weapon equipped!")
+		return
 		
-		self.velocity += knockback_direction * knockback
+	# handle weapon-specific firing logic
+	match current_weapon_data.name:
+		"Shotgun":
+			fire_shotgun(current_weapon_data)
+		"RPG":
+			spawn_rocket(current_weapon_data)
+		_:
+			print("Unknown weapon type")
+			return
+	
+	#print("fired: " + current_weapon_data.name)
+	can_fire = false
+	fireDelayTimer.start(current_weapon_data.fire_delay)
+
+# --- weapon firing implementations ---
+func fire_shotgun(weapon_data : Weapons):
+	var knockback = weapon_data.knockback
+	var knockback_direction = %Camera3D.global_transform.basis.z.normalized()
+	self.velocity += knockback_direction * knockback
+	
+func spawn_rocket(weapon_data : Weapons):
+	print("FPSController: Spawning Rocket! Current Weapon Name: ", weapon_data.name)
+	print("FPSController: Weapon Data Explosion Path: ", weapon_data.explosion_scene_path)
+	
+	var knockback_direction = -player_camera.global_transform.basis.z.normalized()
+	self.velocity += knockback_direction * weapon_data.knockback
+	
+	if not rocket_scene:
+		printerr("Rocket scene not assigned in FPSController")
+		return
 		
-		can_fire = false
-		fireDelayTimer.start(current_weapon_data.fire_delay)
+	var rocket_instance = rocket_scene.instantiate()
+	get_tree().root.add_child(rocket_instance)
+	
+	rocket_instance.global_transform.origin = player_camera.global_transform.origin # CHANGE TO MUZZLE POSITION
+	
+	var rocket_direction = -player_camera.global_transform.basis.z
+	
+	rocket_instance.init_rocket(rocket_direction, weapon_data, self)
+	
+	rocket_instance.look_at(rocket_instance.global_transform.origin + rocket_direction, Vector3.UP)
+
+func get_bullet_direction_with_spread(spread_angle : float) -> Vector3:
+	var base_direction = -player_camera.global_transform.basis.z # Forward direction of the camera
+	
+	# Apply random spread
+	var rand_x = randf_range(-1.0, 1.0)
+	var rand_y = randf_range(-1.0, 1.0)
+	var spread_vector = Vector3(rand_x, rand_y, 0).normalized() * tan(deg_to_rad(spread_angle * 0.5))
+	
+	# Transform the spread vector by the camera's basis to align with its orientation
+	var rotated_spread = player_camera.global_transform.basis * spread_vector
+	
+	var final_direction = (base_direction + rotated_spread).normalized()
+	return final_direction
 
 func _on_fire_delay_timer_timeout():
 	can_fire = true

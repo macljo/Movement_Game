@@ -1,7 +1,13 @@
 res://FPSController/FPSController.tscn
 res://weapons/shotgun/shotgun.tres
+res://FPSController/FPSController.gd
 res://Levels/World.tscn
 res://weapons/weapon.tscn
+res://weapons/bullet.tscn
 res://hud.tscn
-res://FPSController/FPSController.gd
-res://weapons/weapons.gd
+res://weapons/rpg/rocket.tscn
+res://weapons/rpg/explosion.tscn
+res://weapons/rpg/explosion.gd
+res://weapons/rpg/rocket.gd
+res://weapons/rpg/rpg.tres
+res://weapons/init_weapon.gd

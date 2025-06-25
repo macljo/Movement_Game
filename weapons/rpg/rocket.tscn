@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://dk342mjwayvoj"]
+
+[ext_resource type="Script" uid="uid://bb375ugqal0b5" path="res://weapons/rpg/rocket.gd" id="1_sk7v3"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5nkg0"]
+radius = 0.1
+height = 0.6
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sk7v3"]
+radius = 0.1
+height = 0.6
+
+[node name="Rocket" type="CharacterBody3D"]
+script = ExtResource("1_sk7v3")
+explosion_scene_path = "res://weapons/rpg/explosion.tscn"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_5nkg0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_sk7v3")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
