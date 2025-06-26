@@ -1,0 +1,8 @@
+res://FPSController/FPSController.tscn::09068e3bd65d8edffeeb224b4442ff58::1750964534::res://.godot/exported/133200997/export-3d78ccc1817c74c0c464573b9662b003-FPSController.scn
+res://Levels/World.tscn::642886f60654a5b83fd0f4719f30f84e::1750964534::res://.godot/exported/133200997/export-d2482682bdc7d896fbfcdaed3cff5d60-World.scn
+res://weapons/rpg/explosion.tscn::0f9652a746d2eaba5811949cb5ac27bd::1750964535::res://.godot/exported/133200997/export-17c2cef07df9ea98f787b81468a9aab2-explosion.scn
+res://weapons/rpg/rocket.tscn::539f45857d2cbf13855bb4f2e100bc76::1750964535::res://.godot/exported/133200997/export-5ad06d6d09276a141835634edb6e2f05-rocket.scn
+res://weapons/rpg/rpg.tres::78abfd2a0e88a8f4a32f35050741d5e4::1750963833::res://.godot/exported/133200997/export-757479a85a114818edc09acf6eb9c45f-rpg.res
+res://weapons/shotgun/shotgun.tres::2d700704ed07962a9c6d4cc02bed021f::1750962646::res://.godot/exported/133200997/export-a4dbe01e9338527d7c5f1e0f384851ac-shotgun.res
+res://weapons/weapon.tscn::0358dfba22e6f5fec739a1e55793f3ea::1750964534::res://.godot/exported/133200997/export-20131f675f1a048efa86c9b01c6e5d3c-weapon.scn
+res://hud.tscn::be495dfc2f8b7b81c5fe44a116bbb655::1750964534::res://.godot/exported/133200997/export-f4cf891e5f7a93b93d9b27cfb8401ccb-hud.scn

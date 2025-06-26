@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="Weapons" load_steps=3 format=3 uid="uid://d4g4rnoetf0vh"]
+
+[ext_resource type="Script" uid="uid://bcs7dqr8m8mvg" path="res://weapons/weapons.gd" id="1_ts6no"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_jbpnv"]
+radius = 0.2
+height = 1.0
+
+[resource]
+script = ExtResource("1_ts6no")
+name = &"Spoon"
+position = Vector3(0, 0, 0)
+rotation = Vector3(0, 0, 0)
+mesh = SubResource("CapsuleMesh_jbpnv")
+shadow = false
+base_damage = 200.0
+bullet_count = 0
+spread_angle = 0.0
+knockback = 0.0
+ammo_capacity = 0.0
+reload_time = 0.0
+fire_delay = 2.0
+range = 15.0
+explosion_radius = 0.0
+explosion_damage = 0.0
+explosion_knockback_force = 0.0
+projectile_speed = 0.0
+explosion_scene_path = ""
+metadata/_custom_type_script = "uid://bcs7dqr8m8mvg"

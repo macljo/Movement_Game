@@ -26,20 +26,22 @@ point_count = 2
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 11.3346, 0)
 shadow_enabled = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
+[node name="Floor" type="CSGBox3D" parent="." groups=["floor"]]
 use_collision = true
+collision_layer = 3
 size = Vector3(40, 0.1, 20)
 material = SubResource("StandardMaterial3D_u3tya")
 
 [node name="CharacterBody3D" parent="." instance=ExtResource("1_u3tya")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0497487, 0.30758, 0.815798)
 
-[node name="Path3D" type="Path3D" parent="."]
+[node name="Path3D" type="Path3D" parent="." groups=["floor"]]
 transform = Transform3D(2.89159, 0, 0, 0, 2.21693, 0, 0, 0, 2.80202, 0, 0, 10.0178)
 curve = SubResource("Curve3D_c6gwx")
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="Path3D"]
 use_collision = true
+collision_layer = 3
 polygon = PackedVector2Array(0, 0, 0.5, 1, 1, 0)
 mode = 2
 path_node = NodePath("..")

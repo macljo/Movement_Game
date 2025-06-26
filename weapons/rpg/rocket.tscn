@@ -1,25 +1,24 @@
-[gd_scene load_steps=4 format=3 uid="uid://dk342mjwayvoj"]
+[gd_scene load_steps=4 format=3 uid="uid://b7n5lg6oa60kj"]
 
-[ext_resource type="Script" uid="uid://bb375ugqal0b5" path="res://weapons/rpg/rocket.gd" id="1_sk7v3"]
+[ext_resource type="Script" uid="uid://bbx6u4aofojq3" path="res://weapons/rpg/rocket.gd" id="1_sk7v3"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_5nkg0"]
-radius = 0.1
-height = 0.6
+[sub_resource type="CylinderMesh" id="CylinderMesh_5nkg0"]
+top_radius = 0.25
+bottom_radius = 0.25
+height = 1.0
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sk7v3"]
-radius = 0.1
-height = 0.6
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_sk7v3"]
+height = 1.0
+radius = 0.25
 
-[node name="Rocket" type="CharacterBody3D"]
+[node name="Rocket" type="Area3D"]
+collision_mask = 2
 script = ExtResource("1_sk7v3")
-explosion_scene_path = "res://weapons/rpg/explosion.tscn"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_5nkg0")
+mesh = SubResource("CylinderMesh_5nkg0")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("CapsuleShape3D_sk7v3")
+shape = SubResource("CylinderShape3D_sk7v3")
 
-[node name="Timer" type="Timer" parent="."]
-wait_time = 5.0
-autostart = true
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" uid="uid://djb1cqohq3qo1" path="res://FPSController/FPSController.gd" id="1_2j53v"]
 [ext_resource type="PackedScene" uid="uid://b1wn3i5dcwp48" path="res://weapons/weapon.tscn" id="2_jryqt"]
-[ext_resource type="PackedScene" uid="uid://b7n5lg6oa60kj" path="res://weapons/rpg/rocket.tscn" id="2_vcg3l"]
+[ext_resource type="PackedScene" uid="uid://dk342mjwayvoj" path="res://weapons/rpg/rocket.tscn" id="2_vcg3l"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1305s"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_1305s"]
 
-[node name="CharacterBody3D" type="CharacterBody3D" groups=["player"]]
+[node name="CharacterBody3D" type="CharacterBody3D"]
 script = ExtResource("1_2j53v")
 look_sensitivity = 0.002
 rocket_scene = ExtResource("2_vcg3l")
@@ -34,9 +34,9 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 
 [node name="Weapon" parent="HeadOriginalPosition/Head/Camera3D" instance=ExtResource("2_jryqt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.75, -0.75)
 
 [node name="Muzzle" type="Node3D" parent="HeadOriginalPosition/Head/Camera3D/Weapon"]
-unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.346981)
 
 [node name="FireDelayTimer" type="Timer" parent="."]

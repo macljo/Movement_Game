@@ -168,7 +168,9 @@ func fire_weapon():
 		"Shotgun":
 			fire_shotgun(current_weapon_data)
 		"RPG":
-			spawn_rocket(current_weapon_data)
+			fire_rocket(current_weapon_data)
+		"Spoon":
+			swing_spoon(current_weapon_data)
 		_:
 			print("Unknown weapon type")
 			return
@@ -183,41 +185,14 @@ func fire_shotgun(weapon_data : Weapons):
 	var knockback_direction = %Camera3D.global_transform.basis.z.normalized()
 	self.velocity += knockback_direction * knockback
 	
-func spawn_rocket(weapon_data : Weapons):
-	print("FPSController: Spawning Rocket! Current Weapon Name: ", weapon_data.name)
-	print("FPSController: Weapon Data Explosion Path: ", weapon_data.explosion_scene_path)
-	
-	var knockback_direction = -player_camera.global_transform.basis.z.normalized()
-	self.velocity += knockback_direction * weapon_data.knockback
-	
-	if not rocket_scene:
-		printerr("Rocket scene not assigned in FPSController")
-		return
-		
+func fire_rocket(weapon_data : Weapons):
 	var rocket_instance = rocket_scene.instantiate()
 	get_tree().root.add_child(rocket_instance)
+	rocket_instance.global_transform = $%Muzzle.global_transform
+	rocket_instance.direction = -$%Muzzle.global_transform.basis.z.normalized()
 	
-	rocket_instance.global_transform.origin = player_camera.global_transform.origin # CHANGE TO MUZZLE POSITION
+func swing_spoon(weapon_data :Weapons):
+	print("Swinging spoon")
 	
-	var rocket_direction = -player_camera.global_transform.basis.z
-	
-	rocket_instance.init_rocket(rocket_direction, weapon_data, self)
-	
-	rocket_instance.look_at(rocket_instance.global_transform.origin + rocket_direction, Vector3.UP)
-
-func get_bullet_direction_with_spread(spread_angle : float) -> Vector3:
-	var base_direction = -player_camera.global_transform.basis.z # Forward direction of the camera
-	
-	# Apply random spread
-	var rand_x = randf_range(-1.0, 1.0)
-	var rand_y = randf_range(-1.0, 1.0)
-	var spread_vector = Vector3(rand_x, rand_y, 0).normalized() * tan(deg_to_rad(spread_angle * 0.5))
-	
-	# Transform the spread vector by the camera's basis to align with its orientation
-	var rotated_spread = player_camera.global_transform.basis * spread_vector
-	
-	var final_direction = (base_direction + rotated_spread).normalized()
-	return final_direction
-
 func _on_fire_delay_timer_timeout():
 	can_fire = true
